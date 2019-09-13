@@ -11,8 +11,8 @@ using std::vector;
 #include "../POG/po.h"
 #include "typingContext.h"
 
-#define child1(e) po::firstChildElementNonAttributes(e)
-#define childX(e) po::nextSiblingElementNonAttributes(e)
+#define child1(e) e.firstChildElement()
+#define childX(e) e.nextSiblingElement()
 
 static int nbLambda = 0;
 static int nbSet = 0;
@@ -607,9 +607,9 @@ void whyPredicate::collectVarAndTypes(QVector<QString>* variables,
     if (tag == "Quantified_Pred" || tag == "Quantified_Exp" || tag == "Quantified_Set") {
         QVector<QString> qVariables;
         QVector<QString> qTypes;
-        QDomElement child = po::firstChildElementNonAttributes(formula);
+        QDomElement child = formula.firstChildElement();
         while(!child.isNull()) {
-            QDomElement next = po::nextSiblingElementNonAttributes(child);
+            QDomElement next = child.nextSiblingElement();
             collectVarAndTypes(&qVariables, &qTypes, child, enums, localHyps);
             child = next;
         }
@@ -632,19 +632,19 @@ void whyPredicate::collectVarAndTypes(QVector<QString>* variables,
     if (tag == "Binary_Exp" || tag == "Ternary_Exp") {
         QString op = formula.attribute("op");
         if (op == "'") {
-            collectVarAndTypes(variables, types, po::firstChildElementNonAttributes(formula), enums, localHyps);
+            collectVarAndTypes(variables, types, formula.firstChildElement(), enums, localHyps);
             return;
         }
         if (op == "<'") {
-            collectVarAndTypes(variables, types, po::firstChildElementNonAttributes(formula), enums, localHyps);
-            collectVarAndTypes(variables, types, po::nextSiblingElementNonAttributes(po::nextSiblingElementNonAttributes(po::firstChildElementNonAttributes(formula))), enums, localHyps);
+            collectVarAndTypes(variables, types, formula.firstChildElement(), enums, localHyps);
+            collectVarAndTypes(variables, types, formula.firstChildElement().nextSiblingElement().nextSiblingElement(), enums, localHyps);
             return;
         }
     }
 
-    QDomElement child = po::firstChildElementNonAttributes(formula);
+    QDomElement child = formula.firstChildElement();
     while(!child.isNull()) {
-        QDomElement next = po::nextSiblingElementNonAttributes(child);
+        QDomElement next = child.nextSiblingElement();
         collectVarAndTypes(variables, types, child, enums, localHyps);
         child = next;
     }
@@ -809,13 +809,13 @@ QDomElement getUninterpreted(QDomElement e) {
 void whyPredicate::translate(const QMap<QString,QString>& enums) {
     QStringList res;
     res.append("true");
-    QDomElement e1 = po::firstChildElementNonAttributes(e);
+    QDomElement e1 = e.firstChildElement();
     while (!e1.isNull()) {
         QString tag = e1.tagName();
         if (tag != "Set" && tag != "Tag" && tag != "Proof_State" && tag != "iapa") {
             res.append(translate(e1, enums));
         }
-        e1 = po::nextSiblingElementNonAttributes(e1);
+        e1 = e1.nextSiblingElement();
     }
     predicate = res.join(" /\\\n");
 }
@@ -948,7 +948,7 @@ QDomElement getLabel(QString label, QDomElement rec) {
     QDomElement ri = rec.firstChildElement("Record_Item");
     while (!ri.isNull()) {
         if (obfusc(ri.attribute("label")) == label) {
-            return po::firstChildElementNonAttributes(ri).cloneNode().toElement();
+            return ri.firstChildElement().cloneNode().toElement();
         }
         ri = ri.nextSiblingElement("Record_Item");
     }
@@ -1173,14 +1173,14 @@ whyPredicate::translateRecordFieldAccess
 QStringList whyPredicate::translate(const QDomElement formula, const QMap<QString,QString>& enums) {
     QStringList res;
 
-    QDomElement fce = po::firstChildElementNonAttributes(formula);
+    QDomElement fce = formula.firstChildElement();
     QDomElement sce;
     if (!fce.isNull())
-        sce = po::nextSiblingElementNonAttributes(fce);
+        sce = fce.nextSiblingElement();
 
     QDomElement tce;
     if (!sce.isNull())
-        tce = po::nextSiblingElementNonAttributes(sce);
+        tce = sce.nextSiblingElement();
 
 
     QString tag = formula.tagName();
@@ -1614,7 +1614,7 @@ QStringList whyPredicate::translate(const QDomElement formula, const QMap<QStrin
             QDomElement subFormula = fce;
             while (!subFormula.isNull()) {
                 res.append(translate(subFormula,enums));
-                subFormula = po::nextSiblingElementNonAttributes(subFormula);
+                subFormula = subFormula.nextSiblingElement();
             }
         }
         else if(op == "or") {
@@ -1630,7 +1630,7 @@ QStringList whyPredicate::translate(const QDomElement formula, const QMap<QStrin
                 }
                 else
                     return res;
-                subFormula = po::nextSiblingElementNonAttributes(subFormula);
+                subFormula = subFormula.nextSiblingElement();
             }
             if (!res2.isNull())
                 res << res2;
@@ -2136,7 +2136,7 @@ QStringList whyPredicate::translateSigmaPi(QDomElement formula, const QMap<QStri
 
 QString whyPredicate::translateExtensionSet(QDomElement formula, const QMap<QString,QString>& enums) {
 
-    QDomElement sibling = po::nextSiblingElementNonAttributes(formula);
+    QDomElement sibling = formula.nextSiblingElement();
     if(sibling.isNull())
         return "(singleton " + translate(formula, enums).at(0) + ")";
     else
@@ -2145,7 +2145,7 @@ QString whyPredicate::translateExtensionSet(QDomElement formula, const QMap<QStr
 
 QString whyPredicate::translateExtensionSeq(QDomElement formula, const QMap<QString,QString>& enums, int index) {
 
-    QDomElement sibling = po::nextSiblingElementNonAttributes(formula);
+    QDomElement sibling = formula.nextSiblingElement();
     if(sibling.isNull())
         return "(singleton (" + QString::number(index) + ", " + translate(formula, enums).at(0) + "))";
     else
