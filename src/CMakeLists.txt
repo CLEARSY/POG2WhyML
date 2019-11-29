@@ -28,7 +28,6 @@ add_library(POG2WHYLIB
 target_link_libraries(POG2WHYLIB POGLIB Qt5::Core Qt5::Xml)
 
 add_executable(pog2why
-    MACOSX_BUNDLE
     pog2why.cpp
     )
 
