@@ -18,6 +18,8 @@ set(POG2WHY_SRC
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${POFILES_SOURCE_DIR}
+    ${AST_SOURCE_DIR}
+    ${POG_SOURCE_DIR}
     )
 
 add_library(POG2WHYLIB
