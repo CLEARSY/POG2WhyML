@@ -9,7 +9,6 @@ namespace TypingContext {
 
     QDomElement getType(QDomElement e);
     QDomElement getType(unsigned typref);
-    QDomElement getUninterpreted(QDomElement e);
     void makeTypeInfos(QDomDocument doc, TypeInfos* result);
     void setTypeInfos(TypeInfos *typeInfos);
 
@@ -18,4 +17,4 @@ namespace TypingContext {
     bool isFloat(QDomElement e);
 }
 
-#endif // PO_H
+#endif // TyC_H

@@ -111,11 +111,16 @@ int main(int argc, char **argv)
     infile.close();
 
     outfile.setFileName(QString(output));
-    if (opt_A) {
-        saveWhy3(doc, outfile, false, false);
-    } else {
-        classifyGoals(goals, sgoals);
-        saveWhy3(doc, outfile, sgoals);
+    try {
+        if (opt_A) {
+            saveWhy3(doc, outfile, false, false);
+        } else {
+            classifyGoals(goals, sgoals);
+            saveWhy3(doc, outfile, sgoals);
+        }
+    } catch(const std::exception &e){
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }

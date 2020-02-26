@@ -169,7 +169,7 @@ void appendPrelude(QTextStream &out)
     out << "  use bpo2why_prelude.Iteration\n";
     out << "  use bpo2why_prelude.Generalized\n";
     out << "\n";
-    out << "  type uninterpreted_type\n";
+    //out << "  type uninterpreted_type\n";
     out << "\n";
 }
 
@@ -288,7 +288,7 @@ void saveWhy3(QDomDocument pog, QFile& why, bool xml, bool obfs) {
                  !definition.isNull();
                  definition = definition.nextSiblingElement("Definition")) {
                 if (!defines.contains(definition.attribute("name"))) {
-                    throw new WhyTranslateException("Unknown definition " + definition.attribute("name"));
+                    throw WhyTranslateException("Unknown definition " + definition.attribute("name"));
                 }
                 sgDefinitions << defines[definition.attribute("name")];
             }
@@ -397,7 +397,7 @@ void saveWhy3(QDomDocument pog, QFile& why, const std::map<int, std::vector<int>
              !definition.isNull();
              definition = definition.nextSiblingElement("Definition")) {
             if (!defines.contains(definition.attribute("name")))
-                throw new WhyTranslateException("Unknown definition " + definition.attribute("name"));
+                throw WhyTranslateException("Unknown definition " + definition.attribute("name"));
             sgDefinitions << defines[definition.attribute("name")];
         }
         whyLocalHyp* wh;
@@ -590,8 +590,8 @@ void whyPredicate::collectVarAndTypes(QVector<QString>* variables,
     if (tag == "Ref_Hyp") {
         QString num = formula.attribute("num");
 
-    	for (int i =0; i < localHyps.size(); i++) {
-	    whyLocalHyp* hyp = localHyps.at(i);
+        for (int i =0; i < localHyps.size(); i++) {
+            whyLocalHyp* hyp = localHyps.at(i);
             if (hyp->is(num)) {
                 QVector<QString> v = hyp->getVariables();
                 for (int j=0;j<v.size();j++) {
@@ -710,64 +710,9 @@ QString whyPredicate::translateTypeInfo
     if (tag == "Id") {
        return "int";// (*" + ti.attribute("value") + "*)";
     }
-    if (tag == "Uninterpreted_Type") {
-        return "uninterpreted_type";
-    }
-    if (tag == "Generic_Type")
-        return "uninterpreted_type";
-    return "int";
+
+    throw WhyTranslateException("Unknown type element " + tag);
 }
-
-
-//QDomElement whyPredicate::merge(QDomElement type1, QDomElement type2, const QMap<QString,QString>& enums, const QDomElement &src) {
-//    QString typeS1 = translateTypeInfo(type1,enums);
-//    QString typeS2 = translateTypeInfo(type2,enums);
-//    QString tag1 = type1.tagName();
-//    QString tag2 = type2.tagName();
-//    if (tag1 == tag2
-//            && ((tag1 == "Id" && typeS1 == typeS2)
-//            || (type1.attribute("op","") == type2.attribute("op","")
-//            && type1.attribute("value","") == type2.attribute("value","")))) {
-//        if (tag1 == "Struct") {
-//            QDomElement type = type1.ownerDocument().createElement(tag1);
-//            QDomElement ri1 = type1.firstChildElement("Record_Item");
-//            QDomElement ri2 = type2.firstChildElement("Record_Item");
-//            while (!ri1.isNull()) {
-//                QDomElement ri = type1.ownerDocument().createElement("Record_Item");
-//                if (ri1.attribute("label").isEmpty())
-//                    ri.setAttribute("label",ri2.attribute("label"));
-//                else
-//                    ri.setAttribute("label", ri1.attribute("label"));
-//                ri.appendChild(merge(po::firstChildElementNonAttributes(ri1), po::firstChildElementNonAttributes(ri2), enums,src));
-//                type.appendChild(ri);
-//                ri1 = ri1.nextSiblingElement("Record_Item");
-//                ri2 = ri2.nextSiblingElement("Record_Item");
-//            }
-//            return type;
-//        }
-//        else if (tag1 == "Unary_Exp") {
-//            QDomElement type = type1.ownerDocument().createElement(tag1);
-//            type.setAttribute("op", type1.attribute("op"));
-//            type.appendChild(merge(type1.firstChildElement(), type2.firstChildElement(), enums,src));
-//            return type;
-//        } else if (tag1 == "Binary_Exp") {
-//            QDomElement type = type1.ownerDocument().createElement(tag1);
-//            type.setAttribute("op", type1.attribute("op"));
-//            type.appendChild(merge(type1.firstChildElement(), type2.firstChildElement(), enums,src));
-//            type.appendChild(merge(type1.firstChildElement().nextSiblingElement(), type2.firstChildElement().nextSiblingElement(), enums,src));
-//            return type;
-//        } else
-//            return type1.cloneNode().toElement();
-//    }
-//    else if (tag1 == "Uninterpreted_Type" || tag1 == "Generic_Type")
-//        return type2.cloneNode().toElement();
-//    else if (tag2 == "Uninterpreted_Type" || tag2 == "Generic_Type")
-//        return type1.cloneNode().toElement();
-//    else {
-//        throw WhyTranslateException("Cannot merge types:" + typeS1 + " and " + typeS2);
-//    }
-//}
-
 
 void whyPredicate::declare(QTextStream& out) {
     /*
@@ -802,10 +747,6 @@ void whyPredicate::declare(QTextStream& out) {
     out << " =\n   " << predicate << "\n\n";
 }
 
-QDomElement getUninterpreted(QDomElement e) {
-    return e.ownerDocument().createElement("Uninterpreted_Type");
-}
-
 void whyPredicate::translate(const QMap<QString,QString>& enums) {
     QStringList res;
     res.append("true");
@@ -822,126 +763,20 @@ void whyPredicate::translate(const QMap<QString,QString>& enums) {
 
 QDomElement whyPredicate::subset(QDomElement e) {
     QString tag1 = e.tagName();
-    if (tag1 == "Unary_Exp")
-        return e.firstChildElement();
-    else
-        return TypingContext::getUninterpreted(e);
+    assert(tag1 == "Unary_Exp");
+    return e.firstChildElement();
 }
 
 QDomElement whyPredicate::left(const QDomElement e) {
     QString tag1 = e.tagName();
-    if (tag1 == "Binary_Exp")
-        return e.firstChildElement();
-    else
-        return TypingContext::getUninterpreted(e);
+    assert(tag1 == "Binary_Exp");
+    return e.firstChildElement();
 }
 
 QDomElement whyPredicate::right(const QDomElement e) {
     QString tag1 = e.tagName();
-    if (tag1 == "Binary_Exp")
-        return e.firstChildElement().nextSiblingElement();
-    else
-        return TypingContext::getUninterpreted(e);
-}
-
-QDomElement set(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    set.appendChild(e.cloneNode().toElement());
-    return set;
-}
-
-QDomElement getIntSet(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement intE = e.ownerDocument().createElement("Id");
-    intE.setAttribute("value", "INTEGER");
-    set.appendChild(intE);
-    return set;
-}
-
-QDomElement getUninterpretedSet(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement ut = getUninterpreted(e);
-    set.appendChild(ut);
-    return set;
-}
-
-QDomElement getUninterpretedSeq(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement be = e.ownerDocument().createElement("Binary_Exp");
-    be.setAttribute("op","*");
-    QDomElement intE = e.ownerDocument().createElement("Id");
-    intE.setAttribute("value", "INTEGER");
-    be.appendChild(intE);
-    QDomElement ut = getUninterpreted(e);
-    be.appendChild(ut);
-    set.appendChild(be);
-    return set;
-}
-
-QDomElement getInt(QDomElement e) {
-    QDomElement intE = e.ownerDocument().createElement("Id");
-    intE.setAttribute("value", "INTEGER");
-    return intE;
-}
-
-QDomElement getSeq(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement be = e.ownerDocument().createElement("Binary_Exp");
-    be.setAttribute("op","*");
-    QDomElement intE = e.ownerDocument().createElement("Id");
-    intE.setAttribute("value", "INTEGER");
-    be.appendChild(intE);
-    be.appendChild(e.cloneNode().toElement());
-    set.appendChild(be);
-    return set;
-}
-
-QDomElement getFuncToUninterpreted(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement be = e.ownerDocument().createElement("Binary_Exp");
-    be.setAttribute("op","*");
-    be.appendChild(e.cloneNode().toElement());
-    QDomElement ut = getUninterpreted(e);
-    be.appendChild(ut);
-    set.appendChild(be);
-    return set;
-}
-
-QDomElement getFuncFromUninterpreted(QDomElement e) {
-    QDomElement set = e.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement be = e.ownerDocument().createElement("Binary_Exp");
-    be.setAttribute("op","*");
-    QDomElement ut = getUninterpreted(e);
-    be.appendChild(ut);
-    be.appendChild(e.cloneNode().toElement());
-    set.appendChild(be);
-    return set;
-}
-
-QDomElement getFonc(QDomElement e1, QDomElement e2) {
-    QDomElement set = e1.ownerDocument().createElement("Unary_Exp");
-    set.setAttribute("op","POW");
-    QDomElement be = e1.ownerDocument().createElement("Binary_Exp");
-    be.setAttribute("op","*");
-    be.appendChild(e1.cloneNode().toElement());
-    be.appendChild(e2.cloneNode().toElement());
-    set.appendChild(be);
-    return set;
-}
-
-QDomElement getCouple(QDomElement e1, QDomElement e2) {
-   QDomElement be = e1.ownerDocument().createElement("Binary_Exp");
-    be.setAttribute("op","*");
-    be.appendChild(e1.cloneNode().toElement());
-    be.appendChild(e2.cloneNode().toElement());
-    return be;
+    assert(tag1 == "Binary_Exp");
+    return e.firstChildElement().nextSiblingElement();
 }
 
 QDomElement getLabel(QString label, QDomElement rec) {
@@ -984,7 +819,6 @@ QString whyPredicate::translateId
     bool var;
     return whyName(e, enums, var);
 }
-
 
 /*
   The translation to Why of a B struct expression follows
@@ -1201,9 +1035,6 @@ QStringList whyPredicate::translate(const QDomElement formula, const QMap<QStrin
         res.append(translate(sce, enums));
         return res;
     }
-
-    //type = merge(type, TypingContext::getType(formula), enums,formula);
-    //type = TypingContext::getType(formula);
 
     if  (tag == "Binary_Pred"
             || tag == "Exp_Comparison"
@@ -1990,16 +1821,7 @@ QStringList whyPredicate::translate(const QDomElement formula, const QMap<QStrin
             res << "true";
         return res;
     }
-
-    //if (tag == "Tag") {
-    //    return translate(fce, enums);
-    //}
-
-    //if (tag == "Well_Definedness") {
-    //    res << "true";
-    //    return res;
-    //}
-
+    
     throw WhyTranslateException(tag + " " + op);
 }
 
@@ -2012,26 +1834,26 @@ QStringList whyPredicate::translateSigmaPi(QDomElement formula, const QMap<QStri
                                            QString op, QString a1, QString a2) {
     QStringList res;
     QDomElement qs = formula.ownerDocument().createElement("Quantified_Set");
-    //QDomElement  att = formula.ownerDocument().createElement("Attr");
-    //qs.appendChild(att);
-    //QDomElement  ti = formula.ownerDocument().createElement("Type");
-    //att.appendChild(ti);
-    //QDomElement ue = formula.ownerDocument().createElement("Unary_Exp");
-    //ti.appendChild(ue);
-    //ue.setAttribute("op", "POW");
-    //QDomElement vars = formula.firstChildElement("Variables").firstChildElement("Id");
-    //if (!vars.isNull()) {
-    //    ue.appendChild(TypingContext::getType(vars).cloneNode().toElement());
-    //    vars = vars.nextSiblingElement("Id");
-    //}
-    //while (!vars.isNull()) {
-    //    QDomElement be = formula.ownerDocument().createElement("Binary_Exp");
-    //    be.setAttribute("op", "*");
-    //    ue.appendChild(be);
-    //    be.appendChild(ue.firstChild());
-    //    be.appendChild(TypingContext::getType(vars).cloneNode().toElement());
-    //    vars = vars.nextSiblingElement("Id");
-    //}
+    QDomElement  att = formula.ownerDocument().createElement("Attr");
+    qs.appendChild(att);
+    QDomElement  ti = formula.ownerDocument().createElement("Type");
+    att.appendChild(ti);
+    QDomElement ue = formula.ownerDocument().createElement("Unary_Exp");
+    ti.appendChild(ue);
+    ue.setAttribute("op", "POW");
+    QDomElement vars = formula.firstChildElement("Variables").firstChildElement("Id");
+    if (!vars.isNull()) {
+        ue.appendChild(TypingContext::getType(vars).cloneNode().toElement());
+        vars = vars.nextSiblingElement("Id");
+    }
+    while (!vars.isNull()) {
+        QDomElement be = formula.ownerDocument().createElement("Binary_Exp");
+        be.setAttribute("op", "*");
+        ue.appendChild(be);
+        be.appendChild(ue.firstChild());
+        be.appendChild(TypingContext::getType(vars).cloneNode().toElement());
+        vars = vars.nextSiblingElement("Id");
+    }
     qs.appendChild(formula.firstChildElement("Variables").cloneNode().toElement());
     QDomElement b = formula.firstChildElement("Pred").cloneNode().toElement();
     b.setTagName("Body");
@@ -2160,7 +1982,7 @@ QString whyPredicate::VariablesDecl(QVector<QString> variables,
                                     QVector<QString>* typesQ,
                                     QVector<QString>* variablesG,
                                     QVector<QString>* typesG, QMap<QString,QString> enums) {
-    QDomElement type= getUninterpreted(formula);
+    //QDomElement type= getUninterpreted(formula);
     QString res;
     QDomElement fce = formula.firstChildElement("Id");
     while (!fce.isNull()) {
@@ -2292,7 +2114,7 @@ void whySimpleGoal::declare(QTextStream& out) {
     out << "\n";
     QStringList tmp;
     for (int i =0; i < functions.size(); i++) {
-	QString function = functions.at(i);
+        QString function = functions.at(i);
         tmp << function;
     }
     out << tmp.join("\n");
@@ -2470,7 +2292,7 @@ static bool eqType
     if(e1.tagName() == "Generic_Type")
         return true;
 
-    throw new WhyTranslateException("Unknown type element " + e1.tagName());
+    throw WhyTranslateException("Unknown type element " + e1.tagName());
 }
 
 QString whyApply(const QString& fun,

@@ -1,4 +1,5 @@
 #include "typingContext.h"
+#include <cassert>
 
 static TypingContext::TypeInfos* typeInfos;
 
@@ -18,27 +19,22 @@ void TypingContext::setTypeInfos(TypeInfos *ti) {
 }
 
 QDomElement TypingContext::getType(QDomElement e) {
-    if (!e.isNull() && e.hasAttribute("typref")) {
+    assert(!e.isNull());
+    if(e.hasAttribute("typref")){
         QString trs = e.attribute("typref");
         uint tr = trs.toUInt();
         QDomElement res = (*typeInfos)[tr].firstChildElement();
-        if (res.isNull())
-            return getUninterpreted(e);
-        else
-            return res;
+        assert(!res.isNull());
+        return res;
     }
-    else if(!e.firstChildElement("Attr").firstChildElement("Type").isNull())
+    else if(!e.firstChildElement("Attr").firstChildElement("Type").isNull()){
         return e.firstChildElement("Attr").firstChildElement("Type").firstChildElement();
-    else
-        return getUninterpreted(e);
+    }
+    assert(false);
 }
 
 QDomElement TypingContext::getType(unsigned typref) {
     return (*typeInfos)[typref].firstChildElement();
-}
-
-QDomElement TypingContext::getUninterpreted(QDomElement e) {
-    return e.ownerDocument().createElement("Uninterpreted_Type");
 }
 
 bool TypingContext::isInt(QDomElement e) {
