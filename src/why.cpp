@@ -932,7 +932,7 @@ whyPredicate::translateStruct
             " = p_" + ri.attribute("label");
         ri = ri.nextSiblingElement("Record_Item");
     }
-    l += "} (" + struct_name + " ";
+    l += "} (" + function_name + " ";
     for (int i=0;i<qVariables.size();i++)
         l += qVariables.at(i) + " ";
     l += ") <-> (";
@@ -949,7 +949,7 @@ whyPredicate::translateStruct
     }
     l += ")\n";
     functions << l;
-    return whyApply(function_name, qVariables);
+    return whyApply(function_name + " ", qVariables);
 }
 
 QString
@@ -1982,13 +1982,14 @@ QString whyPredicate::VariablesDecl(QVector<QString> variables,
                                     QVector<QString>* typesQ,
                                     QVector<QString>* variablesG,
                                     QVector<QString>* typesG, QMap<QString,QString> enums) {
-    //QDomElement type= getUninterpreted(formula);
     QString res;
     QDomElement fce = formula.firstChildElement("Id");
     while (!fce.isNull()) {
-        if (variables.contains(translate(fce, enums).at(0))) {
-            variablesQ->append(variables.at(variables.lastIndexOf(translate(fce, enums).at(0))));
-            typesQ->append(types.at(variables.lastIndexOf(translate(fce, enums).at(0))));
+        bool var;
+        QString name = whyName(fce, enums, var);
+        if (var) {
+            variablesQ->append(name);
+            typesQ->append(translateTypeInfo(TypingContext::getType(fce), enums));
         }
         fce = fce.nextSiblingElement("Id");
     }
