@@ -1,58 +1,124 @@
 #include "TypingContext.h"
 
+#include <sstream>
+using std::stringstream;
+
 #include <cassert>
+#include <cstdint>
 
-static TypingContext::TypeInfos* typeInfos;
+#include "exceptions.h"
+#include "utils.h"
 
-void TypingContext::makeTypeInfos(QDomDocument doc, TypeInfos *result)
+#include <iostream>
+
+static void translateType(stringstream& ss, const XMLElement *elem);
+
+TypingContext::TypingContext(XMLDocument &doc)
 {
-    QDomElement typeElem = doc.documentElement().firstChildElement("TypeInfos").firstChildElement("Type");
-    while(!typeElem.isNull()) {
-        uint id = typeElem.attribute("id").toUInt();
-        if(!result->contains(id))
-            result->insert(id, typeElem);
-        typeElem = typeElem.nextSiblingElement("Type");
+    const XMLElement *typeElem {doc.RootElement()->FirstChildElement("TypeInfos")->FirstChildElement("Type")};
+    uint64_t counter = 0;
+    m_INTEGER = m_REAL = m_FLOAT = UINT_MAX;
+    while(nullptr != typeElem) {
+        uint64_t id = typeElem->Unsigned64Attribute("id");
+        assert(id == counter);
+        if (m_INTEGER == UINT_MAX && isInt(typeElem)) {
+            m_INTEGER = counter;
+        }
+        else if (m_REAL == UINT_MAX && isReal(typeElem)) {
+            m_REAL = counter;
+        }
+        else if (m_FLOAT == UINT_MAX && isFloat(typeElem)) {
+            m_FLOAT = counter;
+        }
+        m_dom.push_back(typeElem);
+        typeElem = typeElem->NextSiblingElement("Type");
+        ++counter;
     }
-}
-
-void TypingContext::setTypeInfos(TypeInfos *ti) {
-    typeInfos = ti;
-}
-
-QDomElement TypingContext::getType(QDomElement e) {
-    assert(!e.isNull());
-    if(e.hasAttribute("typref")){
-        QString trs = e.attribute("typref");
-        uint tr = trs.toUInt();
-        QDomElement res = (*typeInfos)[tr].firstChildElement();
-        assert(!res.isNull());
-        return res;
+    for (unsigned i = 0; i < m_dom.size(); ++i) {
+        stringstream ss;
+        translateType(ss, m_dom.at(i)->FirstChildElement()
+        );
+        m_translations.push_back(ss.str());
     }
-    else if(!e.firstChildElement("Attr").firstChildElement("Type").isNull()){
-        return e.firstChildElement("Attr").firstChildElement("Type").firstChildElement();
+ }
+
+static void translateType(stringstream& ss, const XMLElement *elem)
+{
+    const char *tag {elem->Name()};
+    const char *op {elem->Attribute("op")};
+    const char *value {elem->Attribute("value")};
+    vector<string> localLabels;
+    if (cstrEq(tag, "Unary_Exp") && cstrEq(op, "POW")) {
+        ss << "(set ";
+        translateType(ss, child1(elem));
+        ss << ")";
     }
-    assert(false);
+    else if (cstrEq(tag, "Binary_Exp") && cstrEq(op, "*")) {
+        ss << "(";
+        translateType(ss, child1(elem));
+        ss << ",";
+        translateType(ss, childX(child1(elem)));
+        ss << ")";
+    }
+    else if (cstrEq(tag, "Id") && cstrEq(value, "INTEGER"))
+        ss << "int";
+    else if (cstrEq(tag, "Id") && cstrEq(value, "BOOL"))
+        ss << "bool";
+    else if (cstrEq(tag, "Id") && cstrEq(value, "STRING"))
+        ss << "set (int, int)";
+    else 
+        WhyTranslateException(string("Unknown type element ") + tag);
 }
 
-QDomElement TypingContext::getType(unsigned typref) {
-    return (*typeInfos)[typref].firstChildElement();
+unsigned TypingContext::getTypRef(const XMLElement *dom) {
+    if (nullptr != dom->Attribute("typref")) {
+        return dom->UnsignedAttribute("typref");
+    }
+    //assert(false);
+    return UINT_MAX;
+}
+const XMLElement *TypingContext::getTypeElement(const XMLElement *dom) const {
+    return m_dom.at(this->getTypRef(dom));
 }
 
-bool TypingContext::isInt(QDomElement e) {
-    if (e.tagName() == "Integer_Literal")
-        return true;
-    QDomElement ti = getType(e);
-    return (ti.tagName() == "Id" && ti.attribute("value") == "INTEGER");
+const XMLElement *TypingContext::getTypeElement(unsigned typref) const {
+    assert(typref < m_dom.size());
+    return m_dom.at(typref);
 }
 
-bool TypingContext::isReal(QDomElement e) {
-    if (e.tagName() == "Real_Literal")
-        return true;
-    QDomElement ti = getType(e);
-    return (ti.tagName() == "Id" && ti.attribute("value") == "REAL");
+const string TypingContext::getTypeTranslation(const XMLElement *dom) const {
+    return this->getTypeTranslation(this->getTypRef(dom));
 }
 
-bool TypingContext::isFloat(QDomElement e) {
-    QDomElement ti = getType(e);
-    return (ti.tagName() == "Id" && ti.attribute("value") == "FLOAT");
+const string TypingContext::getTypeTranslation(unsigned typref) const {
+    assert(typref < m_dom.size());
+    return m_translations.at(typref);
+}
+
+bool TypingContext::isInt(const XMLElement *dom) const  {
+    return this->getTypRef(dom) == m_INTEGER;
+}
+
+bool TypingContext::isReal(const XMLElement *dom) const {
+    return this->getTypRef(dom) == m_REAL;
+}
+
+bool TypingContext::isFloat(const XMLElement *dom) const {
+    return this->getTypRef(dom) == m_FLOAT;
+}
+
+bool TypingContext::isSet(const XMLElement *dom) const {
+    const XMLElement *typeElem {this->getTypeElement(dom)};
+    return cstrEq(typeElem->Name(), "Unary_Exp") && cstrEq(typeElem->Attribute("op"), "POW");
+}
+
+ostream & operator<<(ostream &os, const TypingContext &tc) {
+
+    std::cout << "--- TypingContext ---" << std::endl;
+    for (unsigned i = 0; i < tc.m_translations.size(); ++i) {
+        std::cout << "typref " << i << " " << tc.m_translations.at(i) << std::endl;
+    }
+    std::cout << "---" << std::endl;
+
+    return os;
 }

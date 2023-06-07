@@ -1,14 +1,27 @@
+cmake_minimum_required(VERSION 3.10)
 project(POG2WhyML)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 
 set(POG2WhyML_HEADERS
     typingContext.h
     version.h
     WhyML.h
+    WhyMLInternal.h
+    tinyxml2.h
     )
 
 set(POG2WHY_SRC
     typingContext.cpp
+    exceptions.cpp
     WhyML.cpp
+    WhyPredicate.cpp
+    WhyDefine.cpp
+    WhyLocalHyp.cpp
+    WhySimpleGoal.cpp
+    tinyxml2.cpp
     )
 
 
@@ -25,10 +38,10 @@ add_library(POG2WHYLIB
     ${POG2WHY_HEADERS}
     )
 
-target_link_libraries(POG2WHYLIB POGLIB TINYXML2LIB)
+target_link_libraries(POG2WHYLIB)
 
 add_executable(POG2WhyML
     POG2WhyML.cpp
     )
 
-target_link_libraries(POG2WhyML POG2WHYLIB POGLIB)
+target_link_libraries(POG2WhyML POG2WHYLIB)

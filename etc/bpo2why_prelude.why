@@ -148,6 +148,8 @@ theory PowerSet
   axiom mem_power : forall x y:set 'a [mem x (power y)].
       mem x (power y) <-> subset x y
 
+  predicate strictsubset (x y: set 'a) = subset x y /\ not x = y
+
   function non_empty_power (set 'a) : set (set 'a)
 
   axiom mem_non_empty_power : forall x y:set 'a [mem x (non_empty_power y)].
