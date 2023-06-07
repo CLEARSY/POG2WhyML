@@ -1,11 +1,12 @@
 #include<cstdlib>
 #include<cstring>
 #include<iostream>
+#include<fstream>
 #include<map>
 #include<utility>
 #include<vector>
 
-#include "version_pog2why.h"
+#include "version.h"
 
 using std::cout;
 using std::endl;
@@ -14,10 +15,9 @@ using std::map;
 using std::pair;
 using std::vector;
 
-#include<QDomDocument>
-#include<QFile>
+#include "tinyxml2.h"
 
-#include "why.h"
+#include "WhyML.h"
 
 static void display_help()
 {
@@ -101,19 +101,40 @@ int main(int argc, char **argv)
             return EXIT_FAILURE;
         }
     }
-    QFile infile;
-    QFile outfile;
-    QDomDocument doc;
-    infile.setFileName(QString(input));
-    if(!infile.exists() || !infile.open(QIODevice::ReadOnly))
-        exit(EXIT_FAILURE);
-    doc.setContent(&infile);
-    infile.close();
+    if (opt_a == false && opt_A == false) {
+        display_help();
+        return EXIT_FAILURE;
+    }
+    if (nullptr == input) {
+        display_help();
+        return EXIT_FAILURE;
+    }
+    if (nullptr == output) {
+        display_help();
+        return EXIT_FAILURE;
+    }
 
-    outfile.setFileName(QString(output));
+    std::ifstream infile;
+
+    XMLDocument doc;
+    std::filesystem::path inpath {input};
+    std::filesystem::path outpath {output};
+
+    if (!std::filesystem::exists(inpath)) {
+        exit(EXIT_FAILURE);
+    }
+
+    auto status = doc.LoadFile(input);
+    if (status != tinyxml2::XML_SUCCESS) {
+        std::cerr << doc.ErrorStr();
+        exit(EXIT_FAILURE);
+    }
+
+    std::ofstream outfile (outpath);
+
     try {
         if (opt_A) {
-            saveWhy3(doc, outfile, false, false);
+            saveWhy3(doc, outfile, false);
         } else {
             classifyGoals(goals, sgoals);
             saveWhy3(doc, outfile, sgoals);
