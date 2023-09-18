@@ -8,7 +8,7 @@ using std::pair;
 using std::vector;
 
 #include "why.h"
-#include "../POG/po.h"
+#include "po.h"
 #include "typingContext.h"
 
 #define child1(e) e.firstChildElement()
@@ -453,7 +453,7 @@ void saveWhy3(TypeInfos* typeInfos, QList<QDomElement> hypotheses, QDomElement g
 
     // Enumerated sets declaration
     for (int i =0; i < hypotheses.size(); i++) {
-	QDomElement elem = hypotheses.at(i);
+    QDomElement elem = hypotheses.at(i);
         if (elem.nodeName() == "Set") {
             if (isEnumeratedSetElement(elem))
                 saveEnumeration(out, enums, elem);
@@ -465,7 +465,7 @@ void saveWhy3(TypeInfos* typeInfos, QList<QDomElement> hypotheses, QDomElement g
     int count = 1;
     QVector< whyLemmaDefine* > wDefines;
     for (int i =0; i < hypotheses.size(); i++) {
-	QDomElement elem = hypotheses.at(i);
+    QDomElement elem = hypotheses.at(i);
         if (elem.nodeName() != "Set") {
             whyLemmaDefine* wd = new whyLemmaDefine(elem, count);
             wd->collectVarAndTypes(enums);
@@ -488,7 +488,7 @@ void saveWhy3(TypeInfos* typeInfos, QList<QDomElement> hypotheses, QDomElement g
     // cleanup
     delete wgoal;
     for (int i =0; i < wDefines.size(); i++) {
-	whyLemmaDefine* ptr = wDefines.at(i);
+    whyLemmaDefine* ptr = wDefines.at(i);
         delete ptr;
     }
 }
@@ -1821,7 +1821,7 @@ QStringList whyPredicate::translate(const QDomElement formula, const QMap<QStrin
             res << "true";
         return res;
     }
-    
+
     throw WhyTranslateException(tag + " " + op);
 }
 
