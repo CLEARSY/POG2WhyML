@@ -1,9 +1,8 @@
 project(POG2WHY)
 message(STATUS "Processing ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt")
 
-if(NOT DEFINED QT5_FOUND)
-  find_package(Qt5 REQUIRED COMPONENTS Core Xml)
-endif()
+find_package(Qt6 REQUIRED COMPONENTS Core Xml)
+
 
 set(POG2WHY_HEADERS
     typingContext.h
@@ -24,8 +23,8 @@ include_directories(
 
 add_library(POG2WHY_LIB STATIC ${POG2WHY_SOURCES} ${POG2WHY_HEADERS})
 set_target_properties(POG2WHY_LIB PROPERTIES PREFIX "lib" OUTPUT_NAME "POG2Why")
-target_link_libraries(POG2WHY_LIB POG_LIB Qt5::Core Qt5::Xml)
+target_link_libraries(POG2WHY_LIB POG_LIB Qt6::Core Qt6::Xml)
 
 add_executable(pog2why pog2why.cpp)
 
-target_link_libraries(pog2why -Bstatic POG2WHY_LIB POG_LIB -Bdynamic Qt5::Core Qt5::Xml)
+target_link_libraries(pog2why -Bstatic POG2WHY_LIB POG_LIB -Bdynamic Qt6::Core Qt6::Xml)

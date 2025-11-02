@@ -305,7 +305,11 @@ void saveWhy3(QDomDocument pog, QFile& why, bool xml, bool obfs) {
             for(QDomElement sg = elem.firstChildElement("Simple_Goal");
                 !sg.isNull();
                 sg = sg.nextSiblingElement("Simple_Goal")) {
-                whySimpleGoal* wsg = new whySimpleGoal(sg, simple_goal, localHyps.values(goal), sgDefinitions, wh);
+                QList<whyLocalHyp*> goalHyps;
+                if (localHyps.contains(goal)) {
+                    goalHyps.append(localHyps.value(goal));
+                }
+                whySimpleGoal* wsg = new whySimpleGoal(sg, simple_goal, goalHyps, sgDefinitions, wh);
                 wsg->collectVarAndTypes(enums);
                 wsg->translate(enums);
                 wsg->declare(out);
@@ -543,14 +547,14 @@ static QString whyName(const QDomElement& ident, const QMap<QString,QString>& en
     if (val == "STRING")
         return "string";
     if (val == "MAXINT") {
-        QString val = po::getMaxint();
+        QString val = QString::fromStdString(po::getMaxint());
         if (val.startsWith('-'))
             return "(" + val + ")";
         else
             return val;
     }
     if (val == "MININT") {
-        QString val = po::getMinint();
+        QString val = QString::fromStdString(po::getMinint());
         if (val.startsWith('-'))
             return "(" + val + ")";
         else
