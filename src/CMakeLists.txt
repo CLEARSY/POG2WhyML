@@ -19,6 +19,7 @@ include_directories(
     ${POFILES_SOURCE_DIR}
     ${BASTLIB_SOURCE_DIR}
     ${POG_SOURCE_DIR}
+    ${tinyxml2_SOURCE_DIR}
     )
 
 add_library(POG2WHY_LIB STATIC ${POG2WHY_SOURCES} ${POG2WHY_HEADERS})
@@ -27,4 +28,4 @@ target_link_libraries(POG2WHY_LIB POG_LIB Qt6::Core Qt6::Xml)
 
 add_executable(pog2why pog2why.cpp)
 
-target_link_libraries(pog2why -Bstatic POG2WHY_LIB POG_LIB -Bdynamic Qt6::Core Qt6::Xml)
+target_link_libraries(pog2why -Bstatic POG2WHY_LIB POG_LIB tinyxml2::tinyxml2 -Bdynamic Qt6::Core Qt6::Xml)
