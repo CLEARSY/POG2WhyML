@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: PGO2WhyML
+message: >-
+  If you use this software, please cite it using the metadata from this file.
+type: software
+authors:
+  - name: CLEARSY
+repository-code: "https://github.com/CLEARSY/POG2WhyML"
+abstract: >
+  Tool translating proof obligations from the POG format to WhyML.
+  WhyML is the language of the Why3 platform for deductive program verification.
+license: GPL-3.0

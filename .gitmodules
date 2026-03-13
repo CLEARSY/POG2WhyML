@@ -1,0 +1,6 @@
+[submodule "extern/POGLIB"]
+	path = extern/POGLIB
+	url = ../POGLIB
+[submodule "extern/tinyxml2"]
+	path = extern/tinyxml2
+	url = ../tinyxml2

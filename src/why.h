@@ -1,169 +1,188 @@
+/** why.h
+
+   \copyright Copyright © CLEARSY 2019-2026
+   \license This file is part of POGLIB.
+
+   POG2WhyML is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+    POG2WhyML is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with POG2WhyML. If not, see <https://www.gnu.org/licenses/>.
+*/
 #ifndef WHY_H
 #define WHY_H
 
-#include<map>
-#include<vector>
+#include <QDomElement>
+#include <QFile>
+#include <QList>
+#include <QMap>
+#include <QString>
+#include <QVector>
+#include <map>
+#include <vector>
 
-#include<QDomElement>
-#include<QFile>
-#include<QList>
-#include<QString>
-#include<QVector>
-#include<QMap>
+typedef QHash<uint, QDomElement> TypeInfos;
 
-typedef QHash< uint, QDomElement > TypeInfos;
-
-void saveWhy3(QDomDocument pog, QFile& why, const std::map<int, std::vector<int>>& goals);
+void saveWhy3(QDomDocument pog, QFile& why,
+              const std::map<int, std::vector<int>>& goals);
 void saveWhy3(QDomDocument pog, QFile& why, bool xml, bool obfs);
 
+// static QString obfusc(QString name);
 
-//static QString obfusc(QString name);
-
-void saveWhy3(TypeInfos* typeInfos, QList<QDomElement> hypotheses, QDomElement goal, QFile& file);
-
+void saveWhy3(TypeInfos* typeInfos, QList<QDomElement> hypotheses,
+              QDomElement goal, QFile& file);
 
 class whyLocalHyp;
 
 class whyPredicate {
-public:
-    whyPredicate(QDomElement e);
-    whyPredicate(QDomElement e, QList<whyLocalHyp*> localHyps);
+ public:
+  whyPredicate(QDomElement e);
+  whyPredicate(QDomElement e, QList<whyLocalHyp*> localHyps);
 
-    void collectVarAndTypes(QMap<QString,QString> enums);
-    void translate(const QMap<QString, QString> &enums);
+  void collectVarAndTypes(QMap<QString, QString> enums);
+  void translate(const QMap<QString, QString>& enums);
 
-    virtual void declare(QTextStream& out);
-    QString declareCall();
+  virtual void declare(QTextStream& out);
+  QString declareCall();
 
-    QVector<QString> getVariables() { return variables; }
-    QVector<QString> getTypes() { return types; }
+  QVector<QString> getVariables() { return variables; }
+  QVector<QString> getTypes() { return types; }
 
-protected:
-    QString predName;
-    QString predicate;
-    QVector<QString> variables;
-    QVector<QString> types;
-    QVector<QString> functions;
-    QMap<QString,QString> structTypes;
-    QDomElement e;
-    QStringList translate(const QDomElement formula, const QMap<QString, QString> &enums);
+ protected:
+  QString predName;
+  QString predicate;
+  QVector<QString> variables;
+  QVector<QString> types;
+  QVector<QString> functions;
+  QMap<QString, QString> structTypes;
+  QDomElement e;
+  QStringList translate(const QDomElement formula,
+                        const QMap<QString, QString>& enums);
 
-private:
-    QList<whyLocalHyp*> localHyps;
+ private:
+  QList<whyLocalHyp*> localHyps;
 
-    void collectVarAndTypes(QVector<QString>* variables,
-                                   QVector<QString>* types,
-                                   QDomElement formula,QMap<QString,QString> enums,
-                                   QList<whyLocalHyp *> localHyps);
-    QString translateTypeStruct
-        (const QDomElement&,
-         const QMap<QString,QString>&);
-    QString translateTypeInfo(QDomElement ti, const QMap<QString, QString> &enums);
-    QString translatePred(QDomElement formula, const QMap<QString, QString> &enums);
-    QStringList translateSigmaPi(QDomElement formula, const QMap<QString,QString> &enums, QVector<QString> qVariablesG, QVector<QString> qTypesG, QVector<QString> qVariablesQ, QVector<QString> qTypesQ, int nbOp, QString op, QString a1, QString a2);
-    QString translateExtensionSet(QDomElement formula, const QMap<QString,QString> &enums);
-    QString translateExtensionSeq(QDomElement formula, const QMap<QString,QString> &enums, int index);
-    QString translateVariables(QDomElement formula, const QMap<QString, QString> &enums);
-    QString translateId
-        (const QDomElement& e,
-         const QMap<QString,QString>& enums);
-   QString translateStruct
-        (const QDomElement& e,
-         const QMap<QString, QString> &enums);
-    QString translateRecord
-        (const QDomElement& e,
-         const QMap<QString, QString> &enums);
-    QString translateRecordFieldAccess
-        (const QDomElement& e,
-         const QMap<QString, QString> &enums);
-    QString VariablesDecl(QVector<QString> variables, QVector<QString> types,
-                          QDomElement formula,
-                          QVector<QString>* variablesQ,
-                          QVector<QString>* typesQ,
-                          QVector<QString>* variablesG, QVector<QString> *typesG, QMap<QString, QString> enums);
+  void collectVarAndTypes(QVector<QString>* variables, QVector<QString>* types,
+                          QDomElement formula, QMap<QString, QString> enums,
+                          QList<whyLocalHyp*> localHyps);
+  QString translateTypeStruct(const QDomElement&,
+                              const QMap<QString, QString>&);
+  QString translateTypeInfo(QDomElement ti,
+                            const QMap<QString, QString>& enums);
+  QString translatePred(QDomElement formula,
+                        const QMap<QString, QString>& enums);
+  QStringList translateSigmaPi(QDomElement formula,
+                               const QMap<QString, QString>& enums,
+                               QVector<QString> qVariablesG,
+                               QVector<QString> qTypesG,
+                               QVector<QString> qVariablesQ,
+                               QVector<QString> qTypesQ, int nbOp, QString op,
+                               QString a1, QString a2);
+  QString translateExtensionSet(QDomElement formula,
+                                const QMap<QString, QString>& enums);
+  QString translateExtensionSeq(QDomElement formula,
+                                const QMap<QString, QString>& enums, int index);
+  QString translateVariables(QDomElement formula,
+                             const QMap<QString, QString>& enums);
+  QString translateId(const QDomElement& e,
+                      const QMap<QString, QString>& enums);
+  QString translateStruct(const QDomElement& e,
+                          const QMap<QString, QString>& enums);
+  QString translateRecord(const QDomElement& e,
+                          const QMap<QString, QString>& enums);
+  QString translateRecordFieldAccess(const QDomElement& e,
+                                     const QMap<QString, QString>& enums);
+  QString VariablesDecl(QVector<QString> variables, QVector<QString> types,
+                        QDomElement formula, QVector<QString>* variablesQ,
+                        QVector<QString>* typesQ, QVector<QString>* variablesG,
+                        QVector<QString>* typesG, QMap<QString, QString> enums);
 
-    QDomElement merge(QDomElement type1, QDomElement type2, const QMap<QString, QString> &enums, const QDomElement &src);
+  QDomElement merge(QDomElement type1, QDomElement type2,
+                    const QMap<QString, QString>& enums,
+                    const QDomElement& src);
 
-    bool isSet(QDomElement e) ;
-    QDomElement subset(QDomElement e);
-private:
-    static QDomElement left(const QDomElement e);
-    static QDomElement right(const QDomElement e);
+  bool isSet(QDomElement e);
+  QDomElement subset(QDomElement e);
+
+ private:
+  static QDomElement left(const QDomElement e);
+  static QDomElement right(const QDomElement e);
 };
 
 class whyDefine : public whyPredicate {
-public:
-    whyDefine(QDomElement d, int count);
+ public:
+  whyDefine(QDomElement d, int count);
 
-private:
-    QString name;
+ private:
+  QString name;
 };
 
 class whyLocalHyp : public whyPredicate {
-public:
-    whyLocalHyp(QDomElement d, int goal, QString num);
+ public:
+  whyLocalHyp(QDomElement d, int goal, QString num);
 
-    void declareWithoutDuplicate(QList<whyLocalHyp*>, QTextStream& out);
-    QString declareCallDuplicate();
+  void declareWithoutDuplicate(QList<whyLocalHyp*>, QTextStream& out);
+  QString declareCallDuplicate();
 
-    bool is(QString _num) {
-        return num == _num;
-    }
+  bool is(QString _num) { return num == _num; }
 
-private:
-    QString num;
-    QString goal;
-    whyLocalHyp* duplicate;
+ private:
+  QString num;
+  QString goal;
+  whyLocalHyp* duplicate;
 };
 
 class whySimpleGoal : public whyPredicate {
-public:
-    whySimpleGoal(QDomElement d, int goal, QList<whyLocalHyp*>, QVector<whyDefine*>, whyLocalHyp* hypothesis);
-    void declare(QTextStream& out);
+ public:
+  whySimpleGoal(QDomElement d, int goal, QList<whyLocalHyp*>,
+                QVector<whyDefine*>, whyLocalHyp* hypothesis);
+  void declare(QTextStream& out);
 
-private:
-    QVector<whyDefine*> defines;
-    whyLocalHyp* hypothesis;
+ private:
+  QVector<whyDefine*> defines;
+  whyLocalHyp* hypothesis;
 };
 
 class whyLemmaDefine;
 
 class whyLemmaGoal : public whyPredicate {
-public:
-    whyLemmaGoal(QDomElement d, QVector<whyLemmaDefine*> wds);
-    void declare(QTextStream& out);
-    void translate(QMap<QString,QString> enums);
+ public:
+  whyLemmaGoal(QDomElement d, QVector<whyLemmaDefine*> wds);
+  void declare(QTextStream& out);
+  void translate(QMap<QString, QString> enums);
 
-private:
-    QVector<whyLemmaDefine*> defines;
-    whyLocalHyp* hypothesis;
+ private:
+  QVector<whyLemmaDefine*> defines;
+  whyLocalHyp* hypothesis;
 };
 
 class whyLemmaDefine : public whyDefine {
-public:
-    whyLemmaDefine(QDomElement d, int count);
-    void translate(QMap<QString, QString> enums);
+ public:
+  whyLemmaDefine(QDomElement d, int count);
+  void translate(QMap<QString, QString> enums);
 };
 
-class WhyTranslateException : public std::exception
-{
-public:
-    WhyTranslateException(const char *desc);
-    WhyTranslateException(const QString desc);
-    WhyTranslateException(const std::string& str);
-    ~WhyTranslateException() throw();
+class WhyTranslateException : public std::exception {
+ public:
+  WhyTranslateException(const char* desc);
+  WhyTranslateException(const QString desc);
+  WhyTranslateException(const std::string& str);
+  ~WhyTranslateException() throw();
 
-    virtual const char *what() const throw();
+  virtual const char* what() const throw();
 
-private:
-    std::string description;
+ private:
+  std::string description;
 };
 
-struct NotTypedEmptyException : public std::exception
-{
-    virtual const char *what() const throw() {
-        return "Cannot type empty set";
-    }
-
+struct NotTypedEmptyException : public std::exception {
+  virtual const char* what() const throw() { return "Cannot type empty set"; }
 };
-#endif // WHY_H
+#endif  // WHY_H
