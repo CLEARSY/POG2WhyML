@@ -1,0 +1,115 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+type enum_LANG = E_de | E_en | E_es | E_fr
+function set_enum_LANG : set enum_LANG
+axiom set_enum_LANG_axiom:
+forall x:enum_LANG. mem x set_enum_LANG
+
+type enum_COUNTRY = E_BEL | E_DEU | E_FRA | E_ESP | E_GBR
+function set_enum_COUNTRY : set enum_COUNTRY
+axiom set_enum_COUNTRY_axiom:
+forall x:enum_COUNTRY. mem x set_enum_COUNTRY
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+
+predicate define4 (v_lang1_: enum_LANG)(v_lang2_: enum_LANG)(v_country_: enum_COUNTRY) =
+   true /\
+(mem v_lang1_ set_enum_LANG) /\
+(mem v_lang2_ set_enum_LANG) /\
+(mem v_country_ set_enum_COUNTRY)
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_lang1_: enum_LANG)(v_lang2_: enum_LANG) =
+   true /\
+(v_lang1_ = v_lang2_)
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_lang1_: enum_LANG, v_lang2_: enum_LANG, v_country_: enum_COUNTRY.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_lang1_ v_lang2_ v_country_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+(v_lang1_ = v_lang2_)
+
+
+end

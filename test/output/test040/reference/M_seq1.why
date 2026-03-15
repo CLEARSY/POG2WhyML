@@ -1,0 +1,176 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+function anon_set_1 : (set int)
+
+axiom anon_set_1_def :
+forall v_xx_: int .
+ mem (v_xx_)(anon_set_1 ) <-> (mem v_xx_ integer) /\ ((mod v_xx_ 2) = 0)
+
+
+predicate define4 (v_S1_: (set int))(v_S2_: (set int)) =
+   true /\
+(mem v_S1_ (power integer)) /\
+(v_S1_ == (union (singleton 5) (union (singleton 4) (union (singleton 1) (union (singleton 1) (union (singleton 2) (union (singleton 3) (singleton 8)))))))) /\
+(mem v_S2_ (power integer)) /\
+(v_S2_ == (anon_set_1 ))
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_S1_: (set int))(v_S2_: (set int)) =
+   true /\
+(mem (union (singleton (1, 5)) (union (singleton (2, 2)) (singleton (3, 0)))) (seq1 v_S1_)) /\
+(mem (union (singleton (1, 1.2)) (singleton (2, (- 5.3)))) (seq1 b_real)) /\
+(mem (union (singleton (1, 2)) (union (singleton (2, 3)) (singleton (3, 4)))) (seq1 v_S2_)) /\
+(mem (empty : (set (int,int))) (seq1 v_S1_)) /\
+(mem (empty : (set (int,real))) (seq1 b_real))
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_S1_: (set int), v_S2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+(mem (union (singleton (1, 5)) (union (singleton (2, 2)) (singleton (3, 0)))) (seq1 v_S1_))
+
+
+
+predicate lh_1_0 (v_S1_: (set int)) =
+   true /\
+(mem (union (singleton (1, 5)) (union (singleton (2, 2)) (singleton (3, 0)))) (seq1 v_S1_))
+
+
+
+goal g_1 :
+   forall v_S1_: (set int), v_S2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_S1_)
+   -> 
+   true /\
+(mem (union (singleton (1, 1.2)) (singleton (2, (- 5.3)))) (seq1 b_real))
+
+
+
+predicate lh_2_0 (v_S1_: (set int)) =
+   true /\
+(mem (union (singleton (1, 5)) (union (singleton (2, 2)) (singleton (3, 0)))) (seq1 v_S1_))
+
+
+
+goal g_2 :
+   forall v_S1_: (set int), v_S2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_2_0 v_S1_)
+   -> 
+   true /\
+(mem (union (singleton (1, 2)) (union (singleton (2, 3)) (singleton (3, 4)))) (seq1 v_S2_))
+
+
+
+predicate lh_3_0 (v_S1_: (set int)) =
+   true /\
+(mem (union (singleton (1, 5)) (union (singleton (2, 2)) (singleton (3, 0)))) (seq1 v_S1_))
+
+
+
+goal g_3 :
+   forall v_S1_: (set int), v_S2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_3_0 v_S1_)
+   -> 
+   true /\
+(mem (empty : (set (int,int))) (seq1 v_S1_))
+
+
+
+predicate lh_4_0 (v_S1_: (set int)) =
+   true /\
+(mem (union (singleton (1, 5)) (union (singleton (2, 2)) (singleton (3, 0)))) (seq1 v_S1_))
+
+
+
+goal g_4 :
+   forall v_S1_: (set int), v_S2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_4_0 v_S1_)
+   -> 
+   true /\
+(mem (empty : (set (int,real))) (seq1 b_real))
+
+
+end

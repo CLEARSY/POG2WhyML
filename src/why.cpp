@@ -158,6 +158,8 @@ void appendPrelude(QTextStream& out) {
   out << "       and section 3.6-Integers, table p. 173 *)\n";
   out << "\n";
   out << "  use bpo2why_prelude.B_BOOL\n";
+  out << "  use real.Real\n";
+  out << "  use bpo2why_prelude.B_REAL\n";
   out << "  use bpo2why_prelude.Interval\n";
   out << "  use bpo2why_prelude.PowerSet\n";
   out << "  use bpo2why_prelude.Relation\n";
@@ -528,6 +530,7 @@ static QString whyName(const QDomElement& ident,
   var = false;
   QString val = ident.attribute("value");
   if (val == "BOOL") return "b_bool";
+  if (val == "REAL") return "b_real";
   if (val == "INTEGER") return "integer";
   if (val == "NATURAL") return "natural";
   if (val == "NATURAL1") return "natural1";
@@ -684,6 +687,7 @@ QString whyPredicate::translateTypeInfo(QDomElement ti,
   }
   if (tag == "Id" && ti.attribute("value") == "INTEGER") return "int";
   if (tag == "Id" && ti.attribute("value") == "BOOL") return "bool";
+  if (tag == "Id" && ti.attribute("value") == "REAL") return "real";
   if (tag == "Id" && ti.attribute("value") == "STRING") return "set (int, int)";
   if (tag == "Id" && enums.contains(ti.attribute("value"))) {
     QString s = enums.value(ti.attribute("value"));
@@ -1064,10 +1068,16 @@ QStringList whyPredicate::translate(const QDomElement formula,
     else if (op == "*i")
       res << "(" + translate(fce, enums).at(0) + " * " +
                  translate(sce, enums).at(0) + ")";
+    else if (op == "*r")
+      res << "(" + translate(fce, enums).at(0) + " * " +
+                 translate(sce, enums).at(0) + ")";
     else if (op == "**i")
       res << "(Power.power " + translate(fce, enums).at(0) + " " +
                  translate(sce, enums).at(0) + ")";
     else if (op == "+i")
+      res << "(" + translate(fce, enums).at(0) + " + " +
+                 translate(sce, enums).at(0) + ")";
+    else if (op == "+r")
       res << "(" + translate(fce, enums).at(0) + " + " +
                  translate(sce, enums).at(0) + ")";
     else if (op == "+->")
@@ -1080,6 +1090,9 @@ QStringList whyPredicate::translate(const QDomElement formula,
       res << "(diff " + translate(fce, enums).at(0) + " " +
                  translate(sce, enums).at(0) + ")";
     else if (op == "-i")
+      res << "(" + translate(fce, enums).at(0) + " - " +
+                 translate(sce, enums).at(0) + ")";
+    else if (op == "-r")
       res << "(" + translate(fce, enums).at(0) + " - " +
                  translate(sce, enums).at(0) + ")";
     else if (op == "-->")
@@ -1096,6 +1109,9 @@ QStringList whyPredicate::translate(const QDomElement formula,
                  translate(sce, enums).at(0) + ")";
     else if (op == "/i")
       res << "(div " + translate(fce, enums).at(0) + " " +
+                 translate(sce, enums).at(0) + ")";
+    else if (op == "/r")
+      res << "(" + translate(fce, enums).at(0) + " / " +
                  translate(sce, enums).at(0) + ")";
     else if (op == "/\\")
       res << "(inter " + translate(fce, enums).at(0) + " " +
@@ -1219,7 +1235,7 @@ QStringList whyPredicate::translate(const QDomElement formula,
       res << "(iseq " + translate(fce, enums).at(0) + ")";
     } else if (op == "iseq1") {
       res << "(iseq1 " + translate(fce, enums).at(0) + ")";
-    } else if (op == "-" || op == "-i") {
+    } else if (op == "-" || op == "-i" || op == "-r") {
       res << "(- " + translate(fce, enums).at(0) + ")";
     } else if (op == "~") {
       res << "(inverse " + translate(fce, enums).at(0) + ")";

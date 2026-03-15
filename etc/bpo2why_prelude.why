@@ -95,7 +95,7 @@ theory Interval
   function bounded_int : set int
   
   let constant b_maxint32_value : int = 2147483647
-  let constant b_minint32_value : int = (-2147483647)
+  let constant b_minint32_value : int = -2147483647
 
   axiom mem_natural:
     forall x:int. mem x natural <-> x >= 0
@@ -975,4 +975,12 @@ theory SumSigma
 
   function sigma (p: 'a -> bool) (f: 'a -> int) : int =
     sum (map f (p))
+end
+
+module B_REAL
+  use real.Real
+  use set.Set
+
+  constant b_real : set real
+  axiom b_real_axiom : forall x: real. mem x b_real
 end

@@ -1,0 +1,153 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+
+predicate define4 (v_lb_: int)(v_ub_: int)(v_ii_: int) =
+   true /\
+(mem v_lb_ integer) /\
+(mem v_ub_ integer) /\
+(mem v_ii_ integer)
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_ii_: int)(v_lb_: int)(v_ub_: int) =
+   true /\
+(mem v_ii_ (Interval.mk v_lb_ v_ub_)) /\
+(mem 5 (Interval.mk 1 7)) /\
+(mem 0 (Interval.mk 2 1)) /\
+(mem (2 * v_ii_) (Interval.mk (- v_ub_) (- v_lb_)))
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_lb_: int, v_ub_: int, v_ii_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_lb_ v_ub_ v_ii_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+(mem v_ii_ (Interval.mk v_lb_ v_ub_))
+
+
+
+predicate lh_1_0 (v_ii_: int)(v_lb_: int)(v_ub_: int) =
+   true /\
+(mem v_ii_ (Interval.mk v_lb_ v_ub_))
+
+
+
+goal g_1 :
+   forall v_lb_: int, v_ub_: int, v_ii_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_lb_ v_ub_ v_ii_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_ii_ v_lb_ v_ub_)
+   -> 
+   true /\
+(mem 5 (Interval.mk 1 7))
+
+
+
+predicate lh_2_0 (v_ii_: int)(v_lb_: int)(v_ub_: int) =
+   true /\
+(mem v_ii_ (Interval.mk v_lb_ v_ub_))
+
+
+
+goal g_2 :
+   forall v_lb_: int, v_ub_: int, v_ii_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_lb_ v_ub_ v_ii_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_2_0 v_ii_ v_lb_ v_ub_)
+   -> 
+   true /\
+(mem 0 (Interval.mk 2 1))
+
+
+
+predicate lh_3_0 (v_ii_: int)(v_lb_: int)(v_ub_: int) =
+   true /\
+(mem v_ii_ (Interval.mk v_lb_ v_ub_))
+
+
+
+goal g_3 :
+   forall v_lb_: int, v_ub_: int, v_ii_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_lb_ v_ub_ v_ii_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_3_0 v_ii_ v_lb_ v_ub_)
+   -> 
+   true /\
+(mem (2 * v_ii_) (Interval.mk (- v_ub_) (- v_lb_)))
+
+
+end

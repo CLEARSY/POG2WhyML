@@ -1,0 +1,369 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+
+predicate define4 (v_S1_: (set int))(v_S2_: (set int))(v_S3_: (set int)) =
+   true /\
+(mem v_S1_ (power integer)) /\
+(mem v_S2_ (power integer)) /\
+(mem v_S3_ (power integer)) /\
+(v_S1_ == (empty : (set int))) /\
+(v_S2_ == (singleton 1)) /\
+(v_S3_ == (union (singleton 1) (union (singleton 2) (singleton 3))))
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+function anon_set_1 (v_S1_: (set int)): (set int)
+
+axiom anon_set_1_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_1 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_1 (v_S1_: (set int)) (p_sigma_1 : set(int)) : int
+
+axiom anon_sigma_1_def0 : forall v_S1_: (set int). anon_sigma_1 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_1_def_ind : forall v_S1_: (set int), p_sigma_1 : set(int), v_val_: int. mem (v_val_) p_sigma_1 -> anon_sigma_1 v_S1_ p_sigma_1 = anon_sigma_1 v_S1_ (diff p_sigma_1 (singleton (v_val_))) + v_val_
+function anon_set_2 (v_S2_: (set int)): (set int)
+
+axiom anon_set_2_def :
+forall v_S2_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_2 v_S2_ ) <-> (mem v_val_ v_S2_)
+
+function anon_sigma_2 (v_S2_: (set int)) (p_sigma_2 : set(int)) : int
+
+axiom anon_sigma_2_def0 : forall v_S2_: (set int). anon_sigma_2 v_S2_ (empty : set(int)) = 0 
+
+axiom anon_sigma_2_def_ind : forall v_S2_: (set int), p_sigma_2 : set(int), v_val_: int. mem (v_val_) p_sigma_2 -> anon_sigma_2 v_S2_ p_sigma_2 = anon_sigma_2 v_S2_ (diff p_sigma_2 (singleton (v_val_))) + v_val_
+function anon_set_3 (v_S3_: (set int)): (set int)
+
+axiom anon_set_3_def :
+forall v_S3_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_3 v_S3_ ) <-> (mem v_val_ v_S3_)
+
+function anon_sigma_3 (v_S3_: (set int)) (p_sigma_3 : set(int)) : int
+
+axiom anon_sigma_3_def0 : forall v_S3_: (set int). anon_sigma_3 v_S3_ (empty : set(int)) = 0 
+
+axiom anon_sigma_3_def_ind : forall v_S3_: (set int), p_sigma_3 : set(int), v_val_: int. mem (v_val_) p_sigma_3 -> anon_sigma_3 v_S3_ p_sigma_3 = anon_sigma_3 v_S3_ (diff p_sigma_3 (singleton (v_val_))) + v_val_
+function anon_set_4 (v_S1_: (set int)): (set int)
+
+axiom anon_set_4_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_4 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_pi_1 (v_S1_: (set int)) (p_pi_1 : set(int)) : int
+
+axiom anon_pi_1_def0 : forall v_S1_: (set int). anon_pi_1 v_S1_ (empty : set(int)) = 1 
+
+axiom anon_pi_1_def_ind : forall v_S1_: (set int), p_pi_1 : set(int), v_val_: int. mem (v_val_) p_pi_1 -> anon_pi_1 v_S1_ p_pi_1 = anon_pi_1 v_S1_ (diff p_pi_1 (singleton (v_val_))) * v_val_
+function anon_set_5 (v_S2_: (set int)): (set int)
+
+axiom anon_set_5_def :
+forall v_S2_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_5 v_S2_ ) <-> (mem v_val_ v_S2_)
+
+function anon_pi_2 (v_S2_: (set int)) (p_pi_2 : set(int)) : int
+
+axiom anon_pi_2_def0 : forall v_S2_: (set int). anon_pi_2 v_S2_ (empty : set(int)) = 1 
+
+axiom anon_pi_2_def_ind : forall v_S2_: (set int), p_pi_2 : set(int), v_val_: int. mem (v_val_) p_pi_2 -> anon_pi_2 v_S2_ p_pi_2 = anon_pi_2 v_S2_ (diff p_pi_2 (singleton (v_val_))) * v_val_
+function anon_set_6 (v_S3_: (set int)): (set int)
+
+axiom anon_set_6_def :
+forall v_S3_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_6 v_S3_ ) <-> (mem v_val_ v_S3_)
+
+function anon_pi_3 (v_S3_: (set int)) (p_pi_3 : set(int)) : int
+
+axiom anon_pi_3_def0 : forall v_S3_: (set int). anon_pi_3 v_S3_ (empty : set(int)) = 1 
+
+axiom anon_pi_3_def_ind : forall v_S3_: (set int), p_pi_3 : set(int), v_val_: int. mem (v_val_) p_pi_3 -> anon_pi_3 v_S3_ p_pi_3 = anon_pi_3 v_S3_ (diff p_pi_3 (singleton (v_val_))) * v_val_
+
+predicate define8 (v_S1_: (set int))(v_S2_: (set int))(v_S3_: (set int)) =
+   true /\
+((anon_sigma_1 v_S1_ (anon_set_1 v_S1_ )) = 0) /\
+((anon_sigma_2 v_S2_ (anon_set_2 v_S2_ )) = 1) /\
+((anon_sigma_3 v_S3_ (anon_set_3 v_S3_ )) = 6) /\
+((anon_pi_1 v_S1_ (anon_set_4 v_S1_ )) = 1) /\
+((anon_pi_2 v_S2_ (anon_set_5 v_S2_ )) = 1) /\
+((anon_pi_3 v_S3_ (anon_set_6 v_S3_ )) = 6)
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+function anon_set_7 (v_S1_: (set int)): (set int)
+
+axiom anon_set_7_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_7 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_4 (v_S1_: (set int)) (p_sigma_4 : set(int)) : int
+
+axiom anon_sigma_4_def0 : forall v_S1_: (set int). anon_sigma_4 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_4_def_ind : forall v_S1_: (set int), p_sigma_4 : set(int), v_val_: int. mem (v_val_) p_sigma_4 -> anon_sigma_4 v_S1_ p_sigma_4 = anon_sigma_4 v_S1_ (diff p_sigma_4 (singleton (v_val_))) + v_val_
+goal g_0 :
+   forall v_S1_: (set int), v_S2_: (set int), v_S3_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_ v_S3_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+((anon_sigma_4 v_S1_ (anon_set_7 v_S1_ )) = 0)
+
+
+function anon_set_8 (v_S1_: (set int)): (set int)
+
+axiom anon_set_8_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_8 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_5 (v_S1_: (set int)) (p_sigma_5 : set(int)) : int
+
+axiom anon_sigma_5_def0 : forall v_S1_: (set int). anon_sigma_5 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_5_def_ind : forall v_S1_: (set int), p_sigma_5 : set(int), v_val_: int. mem (v_val_) p_sigma_5 -> anon_sigma_5 v_S1_ p_sigma_5 = anon_sigma_5 v_S1_ (diff p_sigma_5 (singleton (v_val_))) + v_val_
+
+predicate lh_1_0 (v_S1_: (set int)) =
+   true /\
+((anon_sigma_5 v_S1_ (anon_set_8 v_S1_ )) = 0)
+
+
+function anon_set_9 (v_S2_: (set int)): (set int)
+
+axiom anon_set_9_def :
+forall v_S2_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_9 v_S2_ ) <-> (mem v_val_ v_S2_)
+
+function anon_sigma_6 (v_S2_: (set int)) (p_sigma_6 : set(int)) : int
+
+axiom anon_sigma_6_def0 : forall v_S2_: (set int). anon_sigma_6 v_S2_ (empty : set(int)) = 0 
+
+axiom anon_sigma_6_def_ind : forall v_S2_: (set int), p_sigma_6 : set(int), v_val_: int. mem (v_val_) p_sigma_6 -> anon_sigma_6 v_S2_ p_sigma_6 = anon_sigma_6 v_S2_ (diff p_sigma_6 (singleton (v_val_))) + v_val_
+goal g_1 :
+   forall v_S1_: (set int), v_S2_: (set int), v_S3_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_ v_S3_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_S1_)
+   -> 
+   true /\
+((anon_sigma_6 v_S2_ (anon_set_9 v_S2_ )) = 1)
+
+
+function anon_set_10 (v_S1_: (set int)): (set int)
+
+axiom anon_set_10_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_10 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_7 (v_S1_: (set int)) (p_sigma_7 : set(int)) : int
+
+axiom anon_sigma_7_def0 : forall v_S1_: (set int). anon_sigma_7 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_7_def_ind : forall v_S1_: (set int), p_sigma_7 : set(int), v_val_: int. mem (v_val_) p_sigma_7 -> anon_sigma_7 v_S1_ p_sigma_7 = anon_sigma_7 v_S1_ (diff p_sigma_7 (singleton (v_val_))) + v_val_
+
+predicate lh_2_0 (v_S1_: (set int)) =
+   true /\
+((anon_sigma_7 v_S1_ (anon_set_10 v_S1_ )) = 0)
+
+
+function anon_set_11 (v_S3_: (set int)): (set int)
+
+axiom anon_set_11_def :
+forall v_S3_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_11 v_S3_ ) <-> (mem v_val_ v_S3_)
+
+function anon_sigma_8 (v_S3_: (set int)) (p_sigma_8 : set(int)) : int
+
+axiom anon_sigma_8_def0 : forall v_S3_: (set int). anon_sigma_8 v_S3_ (empty : set(int)) = 0 
+
+axiom anon_sigma_8_def_ind : forall v_S3_: (set int), p_sigma_8 : set(int), v_val_: int. mem (v_val_) p_sigma_8 -> anon_sigma_8 v_S3_ p_sigma_8 = anon_sigma_8 v_S3_ (diff p_sigma_8 (singleton (v_val_))) + v_val_
+goal g_2 :
+   forall v_S1_: (set int), v_S2_: (set int), v_S3_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_ v_S3_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_2_0 v_S1_)
+   -> 
+   true /\
+((anon_sigma_8 v_S3_ (anon_set_11 v_S3_ )) = 6)
+
+
+function anon_set_12 (v_S1_: (set int)): (set int)
+
+axiom anon_set_12_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_12 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_9 (v_S1_: (set int)) (p_sigma_9 : set(int)) : int
+
+axiom anon_sigma_9_def0 : forall v_S1_: (set int). anon_sigma_9 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_9_def_ind : forall v_S1_: (set int), p_sigma_9 : set(int), v_val_: int. mem (v_val_) p_sigma_9 -> anon_sigma_9 v_S1_ p_sigma_9 = anon_sigma_9 v_S1_ (diff p_sigma_9 (singleton (v_val_))) + v_val_
+
+predicate lh_3_0 (v_S1_: (set int)) =
+   true /\
+((anon_sigma_9 v_S1_ (anon_set_12 v_S1_ )) = 0)
+
+
+function anon_set_13 (v_S1_: (set int)): (set int)
+
+axiom anon_set_13_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_13 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_pi_4 (v_S1_: (set int)) (p_pi_4 : set(int)) : int
+
+axiom anon_pi_4_def0 : forall v_S1_: (set int). anon_pi_4 v_S1_ (empty : set(int)) = 1 
+
+axiom anon_pi_4_def_ind : forall v_S1_: (set int), p_pi_4 : set(int), v_val_: int. mem (v_val_) p_pi_4 -> anon_pi_4 v_S1_ p_pi_4 = anon_pi_4 v_S1_ (diff p_pi_4 (singleton (v_val_))) * v_val_
+goal g_3 :
+   forall v_S1_: (set int), v_S2_: (set int), v_S3_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_ v_S3_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_3_0 v_S1_)
+   -> 
+   true /\
+((anon_pi_4 v_S1_ (anon_set_13 v_S1_ )) = 1)
+
+
+function anon_set_14 (v_S1_: (set int)): (set int)
+
+axiom anon_set_14_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_14 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_10 (v_S1_: (set int)) (p_sigma_10 : set(int)) : int
+
+axiom anon_sigma_10_def0 : forall v_S1_: (set int). anon_sigma_10 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_10_def_ind : forall v_S1_: (set int), p_sigma_10 : set(int), v_val_: int. mem (v_val_) p_sigma_10 -> anon_sigma_10 v_S1_ p_sigma_10 = anon_sigma_10 v_S1_ (diff p_sigma_10 (singleton (v_val_))) + v_val_
+
+predicate lh_4_0 (v_S1_: (set int)) =
+   true /\
+((anon_sigma_10 v_S1_ (anon_set_14 v_S1_ )) = 0)
+
+
+function anon_set_15 (v_S2_: (set int)): (set int)
+
+axiom anon_set_15_def :
+forall v_S2_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_15 v_S2_ ) <-> (mem v_val_ v_S2_)
+
+function anon_pi_5 (v_S2_: (set int)) (p_pi_5 : set(int)) : int
+
+axiom anon_pi_5_def0 : forall v_S2_: (set int). anon_pi_5 v_S2_ (empty : set(int)) = 1 
+
+axiom anon_pi_5_def_ind : forall v_S2_: (set int), p_pi_5 : set(int), v_val_: int. mem (v_val_) p_pi_5 -> anon_pi_5 v_S2_ p_pi_5 = anon_pi_5 v_S2_ (diff p_pi_5 (singleton (v_val_))) * v_val_
+goal g_4 :
+   forall v_S1_: (set int), v_S2_: (set int), v_S3_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_ v_S3_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_4_0 v_S1_)
+   -> 
+   true /\
+((anon_pi_5 v_S2_ (anon_set_15 v_S2_ )) = 1)
+
+
+function anon_set_16 (v_S1_: (set int)): (set int)
+
+axiom anon_set_16_def :
+forall v_S1_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_16 v_S1_ ) <-> (mem v_val_ v_S1_)
+
+function anon_sigma_11 (v_S1_: (set int)) (p_sigma_11 : set(int)) : int
+
+axiom anon_sigma_11_def0 : forall v_S1_: (set int). anon_sigma_11 v_S1_ (empty : set(int)) = 0 
+
+axiom anon_sigma_11_def_ind : forall v_S1_: (set int), p_sigma_11 : set(int), v_val_: int. mem (v_val_) p_sigma_11 -> anon_sigma_11 v_S1_ p_sigma_11 = anon_sigma_11 v_S1_ (diff p_sigma_11 (singleton (v_val_))) + v_val_
+
+predicate lh_5_0 (v_S1_: (set int)) =
+   true /\
+((anon_sigma_11 v_S1_ (anon_set_16 v_S1_ )) = 0)
+
+
+function anon_set_17 (v_S3_: (set int)): (set int)
+
+axiom anon_set_17_def :
+forall v_S3_: (set int), v_val_: int .
+ mem (v_val_)(anon_set_17 v_S3_ ) <-> (mem v_val_ v_S3_)
+
+function anon_pi_6 (v_S3_: (set int)) (p_pi_6 : set(int)) : int
+
+axiom anon_pi_6_def0 : forall v_S3_: (set int). anon_pi_6 v_S3_ (empty : set(int)) = 1 
+
+axiom anon_pi_6_def_ind : forall v_S3_: (set int), p_pi_6 : set(int), v_val_: int. mem (v_val_) p_pi_6 -> anon_pi_6 v_S3_ p_pi_6 = anon_pi_6 v_S3_ (diff p_pi_6 (singleton (v_val_))) * v_val_
+goal g_5 :
+   forall v_S1_: (set int), v_S2_: (set int), v_S3_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_S1_ v_S2_ v_S3_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_5_0 v_S1_)
+   -> 
+   true /\
+((anon_pi_6 v_S3_ (anon_set_17 v_S3_ )) = 6)
+
+
+end

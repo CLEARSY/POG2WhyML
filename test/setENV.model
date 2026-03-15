@@ -1,0 +1,3 @@
+#!/bin/bash
+
+export POG2WHYML="${POG2WHY_BINARY_DIR}/pog2why"

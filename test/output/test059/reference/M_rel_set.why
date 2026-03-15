@@ -1,0 +1,122 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+
+predicate define4 (v_s0_: (set int))(v_s1_: (set int))(v_tt_: (set (int,(set int)))) =
+   true /\
+(mem v_s0_ (power integer)) /\
+(mem v_s1_ (power integer)) /\
+(mem v_tt_ (relation integer (power integer))) /\
+(v_tt_ == (union (singleton (2 , (union (singleton 6) (singleton 7)))) (union (singleton (5 , (singleton 9))) (union (singleton (7 , (singleton 9))) (singleton (5 , (singleton 3)))))))
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_succ_: (set (int,int)))(v_s0_: (set int))(v_s1_: (set int))(v_tt_: (set (int,(set int)))) =
+   true /\
+(mem v_succ_ (relation v_s0_ v_s1_)) /\
+(mem v_tt_ (relation (union (singleton 2) (union (singleton 5) (singleton 7))) (power (Interval.mk 3 6))))
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_s0_: (set int), v_s1_: (set int), v_tt_: (set (int,(set int))), v_succ_: (set (int,int)).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_tt_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+(mem v_succ_ (relation v_s0_ v_s1_))
+
+
+
+predicate lh_1_0 (v_succ_: (set (int,int)))(v_s0_: (set int))(v_s1_: (set int)) =
+   true /\
+(mem v_succ_ (relation v_s0_ v_s1_))
+
+
+
+goal g_1 :
+   forall v_s0_: (set int), v_s1_: (set int), v_tt_: (set (int,(set int))), v_succ_: (set (int,int)).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_tt_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_succ_ v_s0_ v_s1_)
+   -> 
+   true /\
+(mem v_tt_ (relation (union (singleton 2) (union (singleton 5) (singleton 7))) (power (Interval.mk 3 6))))
+
+
+end

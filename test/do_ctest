@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# Executes a test from within $HOMETEST, with identifier TESTID, for format $FORMAT
+#
+if [ "$#" -ne 2 ]; then
+  echo "Error: Usage is $0 DIRECTORY TESTID" >&2
+  exit 1
+fi
+
+if ! [ -e "$1" ]; then
+  echo "Error: $1 not found" >&2
+  exit 1
+fi
+
+if ! [ -d "$1" ]; then
+  echo "Error: $1 not a directory" >&2
+  exit 1
+fi
+
+HOMETEST=$1
+TESTID=$2
+
+cd $HOMETEST
+
+INPUTDIR="${HOMETEST}/input/${TESTID}"
+
+if ! [ -e "$INPUTDIR" ]; then
+  echo "Error: $1 not found" >&2
+  exit 1
+fi
+
+if ! [ -d "$INPUTDIR" ]; then
+  echo "Error: $1 not a directory" >&2
+  exit 1
+fi
+
+. ./setENV
+
+# Verifies environment is correctly set
+if [ -z "${POG2WHYML}" ]
+then
+    echo "Error: \$PPTRANSTPTP not set."
+    exit 1
+fi
+
+# Verifies that test input directory has one and only one pog file
+if [[ `ls $INPUTDIR/*pog | wc -l` -ne 1 ]]
+then
+  echo "Error: $INPUTDIR should have one and only one POG file (extension .pog)"
+  exit 1
+fi
+
+# Gets into $comp the base name of the pog file
+pog=`find input/${TESTID}/ -name "*pog" -print`
+COMP=`basename $pog .pog`
+
+# Test starts now
+#   - create directory to store outputs
+#   - run the encoder on the selected test and format
+#   - compare the result and the reference
+
+INPUTDIR="$HOMETEST/input/$TESTID"
+RESULTDIR="$HOMETEST/output/$TESTID/result/"
+REFERENCEDIR="$HOMETEST/output/$TESTID/reference/"
+
+mkdir -p "$HOMETEST/output/$TESTID/result/"
+
+$POG2WHYML -A -i $INPUTDIR/$COMP.pog -o $RESULTDIR/$COMP.why > $RESULTDIR/stdout 2> $RESULTDIR/stderr
+echo $? > $RESULTDIR/exitcode
+diff $REFERENCEDIR/exitcode $RESULTDIR/exitcode
+EXITCODE=0
+if [ $? -ne 0 ]
+then
+  echo "Error: exit code differs from reference"
+  EXITCODE=1
+fi
+diff $REFERENCEDIR/stdout $RESULTDIR/stdout
+if [ $? -ne 0 ]
+then
+  echo "Error: standard output differs from reference"
+  EXITCODE=1
+fi
+diff $REFERENCEDIR/stderr $RESULTDIR/stderr
+if [ $? -ne 0 ]
+then
+  echo "Error: standard error differs from reference"
+  EXITCODE=1
+fi
+
+if [ $EXITCODE -eq 0 ]
+then
+  rm -fr $HOMETEST/output/$TESTID/result
+  echo "Test $TESTID $FORMAT OK."
+else
+  echo "Error: $TESTID $FORMAT failed."
+fi
+
+exit $EXITCODE

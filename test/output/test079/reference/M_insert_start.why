@@ -1,0 +1,160 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+
+predicate define4 (v_s0_: (set (int,int)))(v_s1_: (set (int,int)))(v_empty_seq_: (set (int,int)))(v_ii_: int)(v_c0_: int)(v_c1_: int) =
+   true /\
+(mem v_s0_ (seq integer)) /\
+(mem v_s1_ (seq integer)) /\
+(v_s1_ == (union (singleton (1, 5)) (union (singleton (2, 4)) (union (singleton (3, 1)) (union (singleton (4, 1)) (union (singleton (5, 2)) (union (singleton (6, 3)) (singleton (7, 8))))))))) /\
+(mem v_empty_seq_ (seq integer)) /\
+(v_empty_seq_ == (empty : (set (int,int)))) /\
+(mem v_ii_ natural) /\
+(mem v_c0_ integer) /\
+(mem v_c1_ integer)
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_ii_: int)(v_c0_: int)(v_c1_: int)(v_s0_: (set (int,int)))(v_empty_seq_: (set (int,int)))(v_s1_: (set (int,int))) =
+   true /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_s0_)) /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_empty_seq_)) /\
+(mem (1 , 5) (insert_in_front 9 v_s1_)) /\
+(mem (1 , 5) (insert_in_front 9 v_s1_)) /\
+(mem (2 , 5) (insert_in_front 9 v_s1_)) /\
+(mem (2 , 5) (insert_in_front 9 v_s1_))
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_s0_: (set (int,int)), v_s1_: (set (int,int)), v_empty_seq_: (set (int,int)), v_ii_: int, v_c0_: int, v_c1_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_empty_seq_ v_ii_ v_c0_ v_c1_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_s0_))
+
+
+
+predicate lh_1_0 (v_ii_: int)(v_c0_: int)(v_c1_: int)(v_s0_: (set (int,int))) =
+   true /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_s0_))
+
+
+
+goal g_1 :
+   forall v_s0_: (set (int,int)), v_s1_: (set (int,int)), v_empty_seq_: (set (int,int)), v_ii_: int, v_c0_: int, v_c1_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_empty_seq_ v_ii_ v_c0_ v_c1_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_ii_ v_c0_ v_c1_ v_s0_)
+   -> 
+   true /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_empty_seq_))
+
+
+
+predicate lh_2_0 (v_ii_: int)(v_c0_: int)(v_c1_: int)(v_s0_: (set (int,int))) =
+   true /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_s0_))
+
+
+
+goal g_2 :
+   forall v_s0_: (set (int,int)), v_s1_: (set (int,int)), v_empty_seq_: (set (int,int)), v_ii_: int, v_c0_: int, v_c1_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_empty_seq_ v_ii_ v_c0_ v_c1_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_2_0 v_ii_ v_c0_ v_c1_ v_s0_)
+   -> 
+   true /\
+(mem (1 , 5) (insert_in_front 9 v_s1_))
+
+
+
+predicate lh_3_0 (v_ii_: int)(v_c0_: int)(v_c1_: int)(v_s0_: (set (int,int))) =
+   true /\
+(mem (v_ii_ , v_c0_) (insert_in_front v_c1_ v_s0_))
+
+
+
+goal g_3 :
+   forall v_s0_: (set (int,int)), v_s1_: (set (int,int)), v_empty_seq_: (set (int,int)), v_ii_: int, v_c0_: int, v_c1_: int.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_empty_seq_ v_ii_ v_c0_ v_c1_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_3_0 v_ii_ v_c0_ v_c1_ v_s0_)
+   -> 
+   true /\
+(mem (2 , 5) (insert_in_front 9 v_s1_))
+
+
+end

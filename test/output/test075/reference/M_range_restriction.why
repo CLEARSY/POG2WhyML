@@ -1,0 +1,132 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+
+function anon_set_1 : (set (int,int))
+
+axiom anon_set_1_def :
+forall v_xx_: int, v_yy_: int .
+ mem ((v_xx_),v_yy_)(anon_set_1 ) <-> (mem v_xx_ (Interval.mk 0 10)) /\ (mem v_yy_ integer) /\ ((v_xx_ + v_yy_) = 15)
+
+
+predicate define4 (v_s0_: (set int))(v_s1_: (set int))(v_rr_: (set (int,int)))(v_ss_: (set (int,int)))(v_c0_: int)(v_c1_: int)(v_s2_: (set int)) =
+   true /\
+(mem v_s0_ (power integer)) /\
+(mem v_s1_ (power v_s0_)) /\
+(mem v_rr_ (relation v_s0_ v_s1_)) /\
+(mem v_ss_ (relation integer integer)) /\
+(v_ss_ == (anon_set_1 )) /\
+(mem v_c0_ integer) /\
+(mem v_c1_ integer) /\
+(mem v_s2_ (power v_s1_))
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_ss_: (set (int,int)))(v_c0_: int)(v_c1_: int)(v_rr_: (set (int,int)))(v_s2_: (set int)) =
+   true /\
+(mem (10 , 5) (range_restriction v_ss_ (Interval.mk 8 10))) /\
+(mem (v_c0_ , v_c1_) (range_restriction v_rr_ v_s2_))
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_s0_: (set int), v_s1_: (set int), v_rr_: (set (int,int)), v_ss_: (set (int,int)), v_c0_: int, v_c1_: int, v_s2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_rr_ v_ss_ v_c0_ v_c1_ v_s2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+(mem (10 , 5) (range_restriction v_ss_ (Interval.mk 8 10)))
+
+
+
+predicate lh_1_0 (v_ss_: (set (int,int))) =
+   true /\
+(mem (10 , 5) (range_restriction v_ss_ (Interval.mk 8 10)))
+
+
+
+goal g_1 :
+   forall v_s0_: (set int), v_s1_: (set int), v_rr_: (set (int,int)), v_ss_: (set (int,int)), v_c0_: int, v_c1_: int, v_s2_: (set int).
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_s0_ v_s1_ v_rr_ v_ss_ v_c0_ v_c1_ v_s2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_ss_)
+   -> 
+   true /\
+(mem (v_c0_ , v_c1_) (range_restriction v_rr_ v_s2_))
+
+
+end

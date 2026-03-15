@@ -1,0 +1,141 @@
+theory B_translation
+  use bool.Bool
+  use int.Int
+  use int.Power
+  use int.ComputerDivision
+    (* See B-Book, section 3.5.7-Arithmetic, Division, p. 164
+       and section 3.6-Integers, table p. 173 *)
+
+  use bpo2why_prelude.B_BOOL
+  use real.Real
+  use bpo2why_prelude.B_REAL
+  use bpo2why_prelude.Interval
+  use bpo2why_prelude.PowerSet
+  use bpo2why_prelude.Relation
+  use bpo2why_prelude.Image
+  use bpo2why_prelude.Identity
+  use bpo2why_prelude.InverseDomRan
+  use bpo2why_prelude.Function
+  use bpo2why_prelude.Sequence
+  use bpo2why_prelude.IsFinite
+  use bpo2why_prelude.PowerRelation
+  use bpo2why_prelude.Restriction
+  use bpo2why_prelude.Overriding
+  use bpo2why_prelude.Composition
+  use bpo2why_prelude.BList
+  use bpo2why_prelude.MinMax
+  use bpo2why_prelude.Projection
+  use bpo2why_prelude.Iteration
+  use bpo2why_prelude.Generalized
+
+
+
+
+
+predicate define1  =
+   true /\
+(nat == (Interval.mk 0 b_maxint32_value)) /\
+(bounded_int == (Interval.mk b_minint32_value b_maxint32_value))
+
+
+
+predicate define2  =
+   true
+
+
+
+predicate define3  =
+   true
+
+type type_struct_0 = {l_Mark_0 : int;l_good_enough_0 : bool}
+function anon_struct_0 : (set type_struct_0)
+axiom anon_struct_0_def : forall p_Mark : int, p_good_enough : bool. mem {l_Mark_0 = p_Mark;l_good_enough_0 = p_good_enough} (anon_struct_0 ) <-> (mem p_Mark (Interval.mk 0 20) /\ mem p_good_enough b_bool)
+
+
+predicate define4 (v_res_set_: (set type_struct_0))(v_res1_: type_struct_0)(v_res2_: type_struct_0) =
+   true /\
+(v_res_set_ == (anon_struct_0 )) /\
+(v_res1_ = {l_Mark_0 = 12; l_good_enough_0 = True}) /\
+(v_res2_ = {l_Mark_0 = 9; l_good_enough_0 = False})
+
+
+
+predicate define5  =
+   true
+
+
+
+predicate define6  =
+   true
+
+
+
+predicate define7  =
+   true
+
+
+
+predicate define8 (v_res1_: type_struct_0)(v_res2_: type_struct_0)(v_res_set_: (set type_struct_0)) =
+   true /\
+((v_res1_.l_Mark_0) = 12) /\
+(v_res1_ = {l_Mark_0 = 12; l_good_enough_0 = True}) /\
+((v_res2_.l_good_enough_0) = False) /\
+(mem v_res2_ v_res_set_)
+
+
+
+predicate define9  =
+   true
+
+
+
+predicate define10  =
+   true
+
+
+
+
+predicate lh_0_0  =
+   true
+
+
+
+goal g_0 :
+   forall v_res_set_: (set type_struct_0), v_res1_: type_struct_0, v_res2_: type_struct_0.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_res_set_ v_res1_ v_res2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_0_0 )
+   -> 
+   true /\
+((v_res1_.l_Mark_0) = 12)
+
+
+
+predicate lh_1_0 (v_res1_: type_struct_0) =
+   true /\
+((v_res1_.l_Mark_0) = 12)
+
+
+
+goal g_1 :
+   forall v_res_set_: (set type_struct_0), v_res1_: type_struct_0, v_res2_: type_struct_0.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_res_set_ v_res1_ v_res2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_1_0 v_res1_)
+   -> 
+   true /\
+((v_res2_.l_good_enough_0) = False)
+
+
+
+predicate lh_2_0 (v_res1_: type_struct_0) =
+   true /\
+((v_res1_.l_Mark_0) = 12)
+
+
+
+goal g_2 :
+   forall v_res_set_: (set type_struct_0), v_res1_: type_struct_0, v_res2_: type_struct_0.
+   (define1 ) /\ (define2 ) /\ (define9 ) /\ (define4 v_res_set_ v_res1_ v_res2_) /\ (define5 ) /\ (define6 ) /\ (define3 ) /\ (define7 ) /\ (lh_2_0 v_res1_)
+   -> 
+   true /\
+(mem v_res2_ v_res_set_)
+
+
+end
