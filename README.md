@@ -2,6 +2,10 @@
 
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
+
+![Code format](https://github.com/CLEARSY/b2smtlib/actions/workflows/clang-format-check.yml/badge.svg)
+![Build & Test](https://github.com/CLEARSY/b2smtlib/actions/workflows/cmake-multi-platform.yml/badge.svg)
+
 `POG2WhyML` is a translator from pog to WhyML, the language of the [Why3](https://why3.org) platform for deductive program verification.
 
 ## Getting the sources
